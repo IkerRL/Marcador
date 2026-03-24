@@ -1,0 +1,216 @@
+/* --- VARIABLES DE COLOR (ESTILO VALORANT) --- */
+:root {
+    --valorant-dark: #0f1923;
+    --valorant-red: #ff4655;
+    --valorant-blue: #00ad8e;
+    --valorant-white: #ece8e1;
+    --skew-angle: -10deg;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: transparent; /* Para que OBS sea transparente */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
+    overflow: hidden;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.6));
+    animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- BLOQUES DE EQUIPO --- */
+.team-wrapper {
+    display: flex;
+    background: var(--valorant-dark);
+    height: 60px;
+    align-items: center;
+    transform: skew(var(--skew-angle));
+    border-bottom: 4px solid white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.team-wrapper:hover {
+    background: #1a252e;
+}
+
+.team-info {
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    transform: skew(calc(var(--skew-angle) * -1)); /* Corrige la inclinación del texto */
+}
+
+.logo-box {
+    width: 45px;
+    height: 45px;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 12px;
+}
+
+.logo-box img { 
+    width: 35px; 
+    height: 35px; 
+    object-fit: contain; 
+}
+
+.team-name { 
+    color: white; 
+    font-size: 1.3rem; 
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+/* --- MARCADORES DE RONDAS --- */
+.score-box {
+    width: 75px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: var(--valorant-white);
+    color: var(--valorant-dark);
+    transform: skew(0deg); /* El número se queda recto para legibilidad */
+    cursor: pointer;
+    user-select: none;
+}
+
+.team-left { border-color: var(--valorant-red); }
+.team-right { border-color: var(--valorant-blue); }
+
+/* --- CENTRO DEL TORNEO (COPA PRIMATE) --- */
+.tournament-center {
+    background: linear-gradient(180deg, #1f2326 0%, #0f1923 100%);
+    width: 340px;
+    height: 95px;
+    margin: -10px 10px 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.1);
+    position: relative;
+    clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%);
+}
+
+.row-top {
+    margin-bottom: 2px;
+}
+
+.main-title {
+    font-size: 1.7rem;
+    color: white;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.row-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.sub-title {
+    font-size: 1.1rem;
+    color: var(--valorant-red);
+    letter-spacing: 4px;
+    font-weight: 800;
+}
+
+.vol-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px var(--valorant-red));
+}
+
+.phase-badge {
+    position: absolute;
+    bottom: 5px;
+    background: white;
+    color: black;
+    font-size: 0.6rem;
+    padding: 1px 12px;
+    font-weight: 900;
+}
+
+/* --- SELECTOR DE EQUIPOS (MODAL) --- */
+.modal {
+    display: none; 
+    position: fixed;
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--valorant-dark);
+    padding: 30px;
+    border: 2px solid var(--valorant-red);
+    text-align: center;
+    width: 80%;
+    max-width: 900px;
+}
+
+.modal-content h3 { color: white; margin-bottom: 20px; font-size: 1.5rem; }
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.team-option {
+    cursor: pointer;
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid transparent;
+    transition: 0.2s;
+}
+
+.team-option:hover {
+    background: var(--valorant-red);
+    border-color: white;
+}
+
+.team-option img { width: 60px; height: 60px; display: block; margin: 0 auto; }
+.team-option span { 
+    font-size: 0.8rem; 
+    color: white; 
+    display: block; 
+    margin-top: 8px; 
+    font-weight: bold;
+}
+
+.btn-close {
+    background: var(--valorant-red);
+    border: none;
+    color: white;
+    padding: 10px 30px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-100px); }
+    to { opacity: 1; transform: translateY(0); }
+}
