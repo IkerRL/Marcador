@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador Copa Primate</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main-container">
+    <div class="team-wrapper team-left" onclick="openSelector('left')">
+        <div class="team-info">
+            <span id="name-left" class="team-name">SELECCIONAR</span>
+            <div class="logo-box">
+                <img id="img-left" src="placeholder-team.png" alt="Logo A">
+            </div>
+        </div>
+        <div class="score-box" id="score-left" onclick="event.stopPropagation(); changeScore('left')">0</div>
+    </div>
+
+    <div class="tournament-center">
+        <div class="row-top">
+            <span class="main-title">Copa Primate</span>
+        </div>
+        
+        <div class="row-bottom">
+            <img src="logo-vol-i.png" class="vol-logo" alt="Vol.I">
+            <span class="sub-title">VOL.I</span>
+            <img src="logo-vol-i.png" class="vol-logo" alt="Vol.I">
+        </div>
+    </div>
+
+    <div class="team-wrapper team-right" onclick="openSelector('right')">
+        <div class="score-box" id="score-right" onclick="event.stopPropagation(); changeScore('right')">0</div>
+        <div class="team-info">
+            <div class="logo-box">
+                <img id="img-right" src="placeholder-team.png" alt="Logo B">
+            </div>
+            <span id="name-right" class="team-name">SELECCIONAR</span>
+        </div>
+    </div>
+</div>
+
+<div id="team-selector" class="modal">
+    <div class="modal-content">
+        <h3>SELECCIONA EQUIPO</h3>
+        <div class="team-grid" id="team-grid"></div>
+        <button class="btn-close" onclick="closeSelector()">CANCELAR</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
