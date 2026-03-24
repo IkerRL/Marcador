@@ -13,7 +13,8 @@ const equipos = [
     { nombre: "TETONES", logo: "logo11.png" },
     { nombre: "GOATS", logo: "logo12.png" },
     { nombre: "SPIDYBOOBS", logo: "logo13.png" },
-    { nombre: "MUGIWARAS", logo: "logo14.png" }
+    { nombre: "MUGIWARAS", logo: "logo14.png" },
+    { nombre: "Miaus", logo: "logo15.png" }
 ];
 
 let sideSelecting = 'left';
