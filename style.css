@@ -10,7 +10,7 @@
 body {
     margin: 0;
     padding: 20px;
-    background: transparent; /* Para que OBS sea transparente */
+    background: transparent; 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-transform: uppercase;
     overflow: hidden;
@@ -45,13 +45,14 @@ body {
     display: flex;
     align-items: center;
     padding: 0 25px;
-    transform: skew(calc(var(--skew-angle) * -1)); /* Corrige la inclinación del texto */
+    transform: skew(calc(var(--skew-angle) * -1)); 
 }
 
+/* ELIMINADO EL FONDO DEL LOGO AQUÍ */
 .logo-box {
-    width: 45px;
-    height: 45px;
-    background: rgba(255,255,255,0.05);
+    width: 50px;
+    height: 50px;
+    background: transparent; /* Fondo quitado */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,9 +60,11 @@ body {
 }
 
 .logo-box img { 
-    width: 35px; 
-    height: 35px; 
+    width: 45px; 
+    height: 45px; 
     object-fit: contain; 
+    /* Sutil sombra para que logos oscuros resalten sobre el fondo negro */
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
 }
 
 .team-name { 
@@ -82,7 +85,7 @@ body {
     font-weight: 900;
     background: var(--valorant-white);
     color: var(--valorant-dark);
-    transform: skew(0deg); /* El número se queda recto para legibilidad */
+    transform: skew(0deg); 
     cursor: pointer;
     user-select: none;
 }
@@ -153,7 +156,7 @@ body {
     position: fixed;
     top: 0; left: 0; 
     width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95); /* Un poco más oscuro para concentrarse en los logos */
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -164,8 +167,8 @@ body {
     padding: 30px;
     border: 2px solid var(--valorant-red);
     text-align: center;
-    width: 80%;
-    max-width: 900px;
+    width: 90%;
+    max-width: 1000px;
 }
 
 .modal-content h3 { color: white; margin-bottom: 20px; font-size: 1.5rem; }
@@ -179,20 +182,30 @@ body {
 
 .team-option {
     cursor: pointer;
-    padding: 15px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid transparent;
+    padding: 10px;
+    background: rgba(255,255,255,0.03); /* Fondo casi invisible */
+    border: 1px solid rgba(255,255,255,0.1);
     transition: 0.2s;
 }
 
 .team-option:hover {
     background: var(--valorant-red);
     border-color: white;
+    transform: scale(1.05);
 }
 
-.team-option img { width: 60px; height: 60px; display: block; margin: 0 auto; }
+/* ELIMINADO EL FONDO DE LOS LOGOS EN EL SELECTOR */
+.team-option img { 
+    width: 70px; 
+    height: 70px; 
+    display: block; 
+    margin: 0 auto; 
+    object-fit: contain;
+    background: transparent; 
+}
+
 .team-option span { 
-    font-size: 0.8rem; 
+    font-size: 0.75rem; 
     color: white; 
     display: block; 
     margin-top: 8px; 
@@ -203,7 +216,7 @@ body {
     background: var(--valorant-red);
     border: none;
     color: white;
-    padding: 10px 30px;
+    padding: 10px 40px;
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
