@@ -60,8 +60,8 @@ body {
 }
 
 .logo-box img { 
-    width: 45px; 
-    height: 45px; 
+    width: 70px; 
+    height: 70px; 
     object-fit: contain; 
     /* Sutil sombra para que logos oscuros resalten sobre el fondo negro */
     filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
@@ -134,8 +134,8 @@ body {
 }
 
 .vol-logo {
-    width: 28px;
-    height: 28px;
+    width: 45px;
+    height: 45px;
     object-fit: contain;
     filter: drop-shadow(0 0 5px var(--valorant-red));
 }
