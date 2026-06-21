@@ -1,0 +1,1146 @@
+/* ==========================================================================
+   VARIABLES DE TEMA E IDENTIDAD - TRIBAL MAKAKO (SKEWED JUNGLE)
+   ========================================================================== */
+:root {
+    /* TEMA POR DEFECTO: JUNGLE TEMPLE (Moss & Wood) */
+    --team-left-color: #2e7d32;   /* Verde Musgo */
+    --team-left-glow: rgba(46, 125, 50, 0.3);
+    
+    --team-right-color: #ffa000;  /* Amarillo Plátano / Oro */
+    --team-right-glow: rgba(255, 160, 0, 0.3);
+
+    --accent-red: #ffa000;
+    --accent-red-hover: #ffb300;
+    
+    --wood-color-light: #4e2e1a;  /* Madera Clara */
+    --wood-color-dark: #27140b;   /* Madera Oscura */
+    --wood-border: #795548;       /* Borde de tronco */
+    
+    --stone-color: #212529;       /* Piedra Pizarra */
+    --stone-border: #3c4043;
+    
+    --panel-bg: rgba(26, 17, 12, 0.99); /* Consola de caoba oscura */
+    
+    --text-primary: #ece5db;      /* Blanco Coco */
+    --text-muted: rgba(236, 229, 219, 0.6);
+    
+    --skew-angle: -10deg; /* RETORNAMOS LA INCLINACIÓN ORIGINAL */
+    --glass-blur: 0px;    /* SIN DIFUMINADO */
+    --warning-gradient: radial-gradient(circle, rgba(255, 160, 0, 0.4) 0%, rgba(39, 20, 11, 0.7) 100%);
+    --warning-pulse: rgba(255, 160, 0, 0.6);
+}
+
+body[data-theme="cyberpunk"] {
+    /* TEMA: FIRE TRIBE (Lava & Charcoal) */
+    --team-left-color: #b91c1c; /* Rojo Lava */
+    --team-left-glow: rgba(185, 28, 28, 0.3);
+    
+    --team-right-color: #d97706; /* Naranja Fuego */
+    --team-right-glow: rgba(217, 119, 6, 0.3);
+
+    --accent-red: #d97706;
+    --accent-red-hover: #f59e0b;
+    
+    --wood-color-light: #3e2723; /* Madera Quemada */
+    --wood-color-dark: #1b0a00;
+    --wood-border: #5d4037;
+    
+    --stone-color: #1c1917;
+    --stone-border: #3f3f46;
+    
+    --panel-bg: rgba(20, 15, 12, 0.99);
+    
+    --warning-gradient: radial-gradient(circle, rgba(185, 28, 28, 0.4) 0%, rgba(69, 10, 10, 0.7) 100%);
+    --warning-pulse: rgba(185, 28, 28, 0.6);
+}
+
+body[data-theme="retrowave"] {
+    /* TEMA: ANCIENT RUINS (Ruins & Vines) */
+    --team-left-color: #0f766e; /* Enredaderas Teal */
+    --team-left-glow: rgba(15, 118, 110, 0.3);
+    
+    --team-right-color: #b45309; /* Oro Ancestral */
+    --team-right-glow: rgba(180, 83, 9, 0.3);
+
+    --accent-red: #b45309;
+    --accent-red-hover: #d97706;
+    
+    --wood-color-light: #44352a; /* Madera Musgosa */
+    --wood-color-dark: #241c16;
+    --wood-border: #5c4a3c;
+    
+    --stone-color: #292524;
+    --stone-border: #44403c;
+    
+    --panel-bg: rgba(30, 25, 22, 0.99);
+    
+    --warning-gradient: radial-gradient(circle, rgba(180, 83, 9, 0.4) 0%, rgba(66, 30, 3, 0.7) 100%);
+    --warning-pulse: rgba(180, 83, 9, 0.6);
+}
+
+/* ==========================================================================
+   ESTILOS GENERALES
+   ========================================================================== */
+body {
+    margin: 0;
+    padding: 20px;
+    background: transparent; 
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: background-color 0.5s ease;
+}
+
+/* ==========================================================================
+   MARCADOR HUD PRINCIPAL (TABLONES DE MADERA SÓLIDOS CON INCLINACIÓN -10DEG)
+   ========================================================================== */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.8));
+    animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 25px; /* Espacio para las lianas central */
+}
+
+.main-container.timer-active {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50px) scale(0.95);
+}
+
+.team-glow-container {
+    position: relative;
+    transition: all 0.3s;
+}
+
+/* Tablón de Madera Sólida Inclinada (SIN DIFUMINADO) */
+.team-wrapper {
+    display: flex;
+    background: linear-gradient(135deg, var(--wood-color-light) 0%, var(--wood-color-dark) 100%);
+    height: 60px;
+    align-items: center;
+    transform: skew(var(--skew-angle));
+    border: 2px solid var(--wood-border);
+    border-bottom: 4px solid rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.65), inset 0 2px 4px rgba(255, 255, 255, 0.08);
+    box-sizing: border-box;
+}
+
+.team-left .team-wrapper {
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.06) 0%, var(--wood-color-dark) 100%);
+    border-bottom-color: var(--team-left-color);
+}
+.team-right .team-wrapper {
+    background: linear-gradient(135deg, rgba(255, 160, 0, 0.06) 0%, var(--wood-color-dark) 100%);
+    border-bottom-color: var(--team-right-color);
+}
+
+.team-left .team-wrapper:hover {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
+    transform: skew(var(--skew-angle)) translateY(-1px);
+    border-color: #3e8e41;
+    border-bottom-color: var(--team-left-color);
+}
+.team-right .team-wrapper:hover {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
+    transform: skew(var(--skew-angle)) translateY(-1px);
+    border-color: #f5b041;
+    border-bottom-color: var(--team-right-color);
+}
+
+/* Efecto de resina brillante al cambiar marcador */
+.team-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.06), transparent);
+    transform: skew(var(--skew-angle)) translateX(-100%);
+    pointer-events: none;
+    z-index: 4;
+}
+.team-wrapper.shine-active::before {
+    animation: shineSweep 1.8s ease-in-out;
+}
+
+/* Contenido dentro del tablón (Inclinación revertida para mantener alineación limpia) */
+.team-info {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    transform: skew(calc(var(--skew-angle) * -1)); 
+    z-index: 3;
+}
+
+.logo-box {
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.logo-box img { 
+    width: 55px; 
+    height: 55px; 
+    object-fit: contain; 
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.45));
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.team-wrapper:hover .logo-box img {
+    transform: scale(1.15) rotate(4deg);
+}
+
+.team-name { 
+    color: var(--text-primary); 
+    font-size: 1.25rem; 
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-family: 'Outfit', sans-serif;
+    text-shadow: 1px 2px 2px rgba(0,0,0,0.9), -1px -1px 0px rgba(255,255,255,0.06);
+}
+
+/* Hojas Selváticas Decorativas en CSS (sin emoticonos) en las esquinas */
+.leaf-deco {
+    position: absolute;
+    width: 10px;
+    height: 16px;
+    background: #2e7d32;
+    border-radius: 0 100% 0 100%;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+.team-left .leaf-1 {
+    top: -7px; left: 20px;
+    transform: skew(calc(var(--skew-angle) * -1)) rotate(-15deg);
+    background: #388e3c;
+}
+.team-left .leaf-2 {
+    bottom: -7px; left: 45px;
+    transform: skew(calc(var(--skew-angle) * -1)) rotate(45deg);
+    background: #2e7d32;
+}
+.team-right .leaf-1 {
+    top: -7px; right: 20px;
+    transform: skew(calc(var(--skew-angle) * -1)) rotate(15deg);
+    background: #388e3c;
+}
+.team-right .leaf-2 {
+    bottom: -7px; right: 45px;
+    transform: skew(calc(var(--skew-angle) * -1)) rotate(-45deg);
+    background: #2e7d32;
+}
+
+/* ==========================================================================
+   EL MARCADOR DE RONDAS (PIEDRA MACIZA TALLADA)
+   ========================================================================== */
+.score-box {
+    width: 80px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.7rem;
+    font-weight: 900;
+    background: linear-gradient(180deg, #2c302e 0%, #161817 100%); /* Piedra pizarra sólida */
+    border: 3px solid var(--stone-border);
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    z-index: 5;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Efecto tallado 3D */
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px rgba(0,0,0,0.9);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.7), 0 3px 6px rgba(0,0,0,0.45);
+    box-sizing: border-box;
+}
+
+.team-left .score-box {
+    color: #ffd200; /* Plátano Activo */
+    border-right: 3px solid var(--team-left-color);
+}
+.team-right .score-box {
+    color: #ffd200;
+    border-left: 3px solid var(--team-right-color);
+}
+
+.score-box:hover {
+    filter: brightness(1.1);
+}
+
+/* Brackets esquineros mecánicos en el score */
+.score-box::before, .score-box::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    transform: skew(calc(var(--skew-angle) * -1));
+}
+.score-box::before {
+    top: 4px; left: 4px;
+    border-right: none; border-bottom: none;
+}
+.score-box::after {
+    bottom: 4px; right: 4px;
+    border-left: none; border-top: none;
+}
+
+/* ==========================================================================
+   CENTRO DEL TORNEO (TABLÓN DE MADERA COLGADO POR LIANAS)
+   ========================================================================== */
+.tournament-center {
+    background: linear-gradient(180deg, #3d2414 0%, #22130a 100%);
+    border: 3.5px double #7c4d32;
+    border-radius: 14px;
+    width: 320px;
+    height: 90px;
+    margin: -10px 10px 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65), inset 0 2px 4px rgba(255,255,255,0.08);
+    clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%);
+}
+
+/* Ropes/Lianas para colgar el panel central */
+.tournament-center::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 24px;
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(90deg, #5c3e21, #2e1d0f);
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    z-index: -1;
+}
+.tournament-center::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: 24px;
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(90deg, #5c3e21, #2e1d0f);
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    z-index: -1;
+}
+
+/* Hojas decorativas de enredadera en la unión de lianas */
+.tournament-center .row-top::before {
+    content: '🍃';
+    position: absolute;
+    top: -5px;
+    left: 18px;
+    font-size: 1.1rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+.tournament-center .row-top::after {
+    content: '🍃';
+    position: absolute;
+    top: -5px;
+    right: 18px;
+    font-size: 1.1rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+
+.center-accent-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--team-left-color), var(--team-right-color));
+    z-index: 10;
+    opacity: 0.85;
+}
+
+.row-top {
+    margin-bottom: 2px;
+    z-index: 2;
+}
+
+.main-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.7rem;
+    color: #ffeb3b; /* Amarillo Banana */
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 2px rgba(0,0,0,0.9);
+    animation: breathingGlow 3s infinite alternate ease-in-out;
+}
+
+@keyframes breathingGlow {
+    0% { filter: drop-shadow(0 0 1px rgba(255, 235, 59, 0.15)); }
+    100% { filter: drop-shadow(0 0 6px rgba(255, 235, 59, 0.5)); }
+}
+
+.row-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    z-index: 2;
+}
+
+.sub-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    color: #ffa000;
+    letter-spacing: 4px;
+    font-weight: 900;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.85);
+    transition: all 0.3s;
+}
+
+/* Soportes para los monos (sin círculos) */
+.monkey-pad {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.monkey-pad.left-pad {
+}
+.monkey-pad.right-pad {
+}
+.monkey-pad:hover {
+    transform: scale(1.2) rotate(8deg);
+}
+
+.vol-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    transition: all 0.3s;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+.monkey-pad:hover .vol-logo {
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   NÚCLEOS DE MAPAS (PLÁTANOS WIGGLING DE LA SELVA)
+   ========================================================================== */
+.map-wins-container {
+    display: flex;
+    gap: 8px;
+    padding: 0 15px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    transform: skew(calc(var(--skew-angle) * -1));
+    position: relative;
+    z-index: 3;
+}
+
+.map-win-dot {
+    font-size: 1.4rem;
+    cursor: pointer;
+    filter: grayscale(100%) opacity(0.18) drop-shadow(0 0 1px black);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    user-select: none;
+    transform: skew(calc(var(--skew-angle) * -1));
+}
+
+.map-win-dot:hover {
+    transform: skew(calc(var(--skew-angle) * -1)) scale(1.2);
+}
+
+.map-win-dot.active {
+    filter: drop-shadow(0 2px 4px rgba(255, 210, 0, 0.65)) !important;
+    animation: bananaWiggle 1s infinite alternate ease-in-out;
+}
+
+@keyframes bananaWiggle {
+    0% { transform: skew(calc(var(--skew-angle) * -1)) scale(1.3) rotate(-12deg); }
+    100% { transform: skew(calc(var(--skew-angle) * -1)) scale(1.3) rotate(12deg); }
+}
+
+/* Ocultar según formato */
+.format-bo1 .map-wins-container {
+    display: none !important;
+}
+.format-bo3 .map-win-dot[data-idx="2"] {
+    display: none !important;
+}
+
+/* ==========================================================================
+   ALERTA DE MATCH POINT (CARTEL ROJO RÚSTICO)
+   ========================================================================== */
+.match-point-badge {
+    position: absolute;
+    top: -24px;
+    background: #c62828; /* Rojo peligro */
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    padding: 3px 14px;
+    border-radius: 4px;
+    letter-spacing: 2px;
+    border: 2px solid #5f0909;
+    z-index: 50;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    animation: mp-wood-pulse 1s infinite alternate ease-in-out;
+}
+
+#mp-left {
+    left: 15px;
+    transform: skew(calc(var(--skew-angle) * -1));
+}
+#mp-right {
+    right: 15px;
+    transform: skew(calc(var(--skew-angle) * -1));
+}
+
+@keyframes mp-wood-pulse {
+    0% { transform: skew(calc(var(--skew-angle) * -1)) translateY(0) scale(1); box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+    100% { transform: skew(calc(var(--skew-angle) * -1)) translateY(-2px) scale(1.05); box-shadow: 0 6px 15px rgba(198, 40, 40, 0.4); }
+}
+
+/* ==========================================================================
+   CONSOLA DE CONTROL DEL ADMINISTRADOR (UNIFIED CONSOLE)
+   ========================================================================== */
+.admin-trigger-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(43, 24, 13, 0.95);
+    border: 1.5px solid var(--accent-red);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.4rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1100;
+}
+.admin-trigger-btn:hover {
+    transform: scale(1.1) rotate(45deg);
+    box-shadow: 0 0 15px var(--team-right-glow);
+    border-color: white;
+}
+
+.admin-console {
+    position: fixed;
+    bottom: 85px;
+    left: 20px;
+    width: 450px;
+    max-height: calc(100vh - 120px);
+    background: var(--panel-bg);
+    border: 3px solid var(--wood-border);
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    z-index: 1050;
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+.admin-console.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.admin-header {
+    background: rgba(255, 255, 255, 0.01);
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.admin-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: white;
+}
+.admin-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    outline: none;
+}
+.admin-close:hover {
+    color: var(--accent-red);
+}
+
+.admin-tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.admin-tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+    outline: none;
+}
+.admin-tab:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.01);
+}
+.admin-tab.active {
+    color: var(--accent-red);
+    border-bottom-color: var(--accent-red);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.admin-panel-content {
+    display: none;
+}
+.admin-panel-content.active {
+    display: block;
+    animation: tabFadeIn 0.3s ease-out;
+}
+
+/* Campos de Formulario en Consola */
+.admin-section {
+    margin-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding-bottom: 18px;
+}
+.admin-section:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.admin-section-title {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+.admin-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.admin-col {
+    flex: 1;
+}
+
+.admin-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    outline: none;
+}
+.admin-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+.admin-btn:active {
+    transform: translateY(0);
+}
+.admin-btn.btn-primary {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: black;
+    font-weight: 900;
+}
+.admin-btn.btn-primary:hover {
+    background: var(--accent-red-hover);
+    box-shadow: 0 0 10px var(--team-right-glow);
+}
+.admin-btn.btn-danger {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+.admin-btn.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+}
+
+/* Ajustador de Marcadores */
+.admin-round-adjuster {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.adjuster-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.adjuster-team-name {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: white;
+    max-width: 145px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+.adjuster-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.adjuster-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    outline: none;
+    user-select: none;
+}
+.adjuster-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.adjuster-val {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    width: 28px;
+    text-align: center;
+    color: white;
+}
+
+/* Inputs de Texto */
+.admin-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.admin-input-group label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+.admin-input-group input, .admin-input-group select {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+}
+.admin-input-group input:focus, .admin-input-group select:focus {
+    border-color: var(--accent-red);
+    box-shadow: 0 0 10px var(--team-right-glow);
+}
+
+/* Control de segmentos */
+.segment-control {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.segment-option {
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    border-radius: 6px;
+    outline: none;
+}
+.segment-option.active {
+    background: var(--accent-red);
+    color: black;
+    font-weight: 900;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Pestaña de Selección de Equipos (Grid) */
+.side-selector-row {
+    display: flex;
+    background: rgba(0,0,0,0.35);
+    padding: 3px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.side-selector-btn {
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 900;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 6px;
+    letter-spacing: 1.5px;
+    transition: all 0.25s;
+    outline: none;
+}
+.side-selector-btn.active.left {
+    background: var(--team-left-color);
+    color: white;
+}
+.side-selector-btn.active.right {
+    background: var(--team-right-color);
+    color: black;
+}
+
+.admin-team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.admin-team-option {
+    cursor: pointer;
+    padding: 10px 6px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+.admin-team-option:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--accent-red);
+    transform: translateY(-2px);
+}
+.admin-team-option img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.admin-team-option span {
+    font-size: 0.75rem;
+    color: white;
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+/* Custom Scrollbars */
+.admin-body::-webkit-scrollbar,
+.admin-team-grid::-webkit-scrollbar {
+    width: 6px;
+}
+.admin-body::-webkit-scrollbar-track,
+.admin-team-grid::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+.admin-body::-webkit-scrollbar-thumb,
+.admin-team-grid::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+}
+.admin-body::-webkit-scrollbar-thumb:hover,
+.admin-team-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+/* ==========================================================================
+   OVERLAY DEL TEMPORIZADOR EN PANTALLA (CON LOGS DE MADERA Y SIN DIFUMINADO)
+   ========================================================================== */
+.timer-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 999;
+    background: rgba(4, 5, 8, 0.9);
+    transition: background 0.5s ease;
+    animation: fadeIn 0.4s ease;
+}
+
+.timer-overlay.tech-pause {
+    background: var(--warning-gradient);
+    animation: pulseWarningBg 3s infinite alternate;
+}
+
+@keyframes pulseWarningBg {
+    0% { opacity: 0.9; }
+    100% { opacity: 1; }
+}
+
+.timer-card {
+    text-align: center;
+    background: linear-gradient(135deg, var(--wood-color-light) 0%, var(--wood-color-dark) 100%);
+    border: 3.5px double var(--wood-border);
+    padding: 40px 60px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0,0,0,0.5);
+    max-width: 500px;
+    width: 85%;
+    animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.timer-overlay.tech-pause .timer-card {
+    border-color: white;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 45px var(--warning-pulse);
+}
+
+.timer-emoticon {
+    font-size: 5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+    animation: emojiBounce 1.5s infinite ease-in-out alternate;
+}
+
+@keyframes emojiBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-15px) scale(1.1); }
+}
+
+.timer-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.2rem;
+    color: #ffeb3b;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.9);
+}
+
+.timer-countdown {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 5.5rem;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.9);
+    margin-bottom: 20px;
+}
+
+.timer-overlay.tech-pause .timer-countdown {
+    color: #ffffff;
+    text-shadow: 0 0 25px var(--warning-pulse), 2px 2px 3px rgba(0,0,0,0.9);
+}
+
+.btn-timer-cancel {
+    background: var(--accent-red);
+    border: none;
+    color: black;
+    padding: 10px 30px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+    transition: all 0.2s;
+    font-family: 'Rajdhani', sans-serif;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.btn-timer-cancel:hover {
+    background: var(--accent-red-hover);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+}
+
+/* ==========================================================================
+   MICRO-ANIMACIONES Y TRANSICIONES
+   ========================================================================== */
+@keyframes tabFadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-100px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shineSweep {
+    0% { transform: skew(var(--skew-angle)) translateX(-100%); }
+    50% { transform: skew(var(--skew-angle)) translateX(100%); }
+    100% { transform: skew(var(--skew-angle)) translateX(100%); }
+}
+
+@keyframes popScore {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.2); filter: brightness(1.2); }
+    100% { transform: scale(1); }
+}
+.pop-anim {
+    animation: popScore 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Red sync */
+.pulse-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+.pulse-icon::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    animation: status-pulse 1.5s infinite;
+    opacity: 0.4;
+}
+.pulse-icon.red { background: #ff4655; }
+.pulse-icon.red::after { border: 3px solid #ff4655; }
+.pulse-icon.yellow { background: #ffd700; }
+.pulse-icon.yellow::after { border: 3px solid #ffd700; }
+.pulse-icon.green { background: #00ff88; }
+.pulse-icon.green::after { border: 3px solid #00ff88; }
+
+@keyframes status-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.status-badge.status-disconnected {
+    background: rgba(255, 70, 85, 0.15);
+    color: #ff4655;
+    border: 1px solid #ff4655;
+}
+.status-badge.status-connecting {
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+}
+.status-badge.status-connected {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+}
+
+/* ==========================================================================
+   MODO OBS / MODOS PANTALLA
+   ========================================================================== */
+.pantalla-mode .admin-trigger-btn,
+.obs-mode .admin-trigger-btn,
+.pantalla-mode .admin-console,
+.obs-mode .admin-console,
+.pantalla-mode .modal,
+.obs-mode .modal,
+.pantalla-mode .btn-timer-cancel,
+.obs-mode .btn-timer-cancel {
+    display: none !important;
+}
+
+.pantalla-mode .team-wrapper,
+.pantalla-mode .score-box,
+.pantalla-mode .map-win-dot,
+.pantalla-mode .monkey-pad {
+    cursor: default !important;
+}
+
+.obs-mode {
+    pointer-events: none !important;
+}

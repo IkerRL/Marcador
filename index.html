@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador Copa Primate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Rajdhani:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- MQTT.js para sincronización en tiempo real -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js"></script>
+</head>
+
+<body>
+    <div class="main-container format-bo3" id="main-scoreboard">
+        <!-- EQUIPO IZQUIERDA -->
+        <div class="team-glow-container team-left" id="glow-container-left">
+            <div class="team-wrapper" id="wrapper-left" onclick="openSelector('left')">
+                <div class="leaf-deco leaf-1"></div>
+                <div class="leaf-deco leaf-2"></div>
+                <div class="match-point-badge" id="mp-left">MATCH POINT</div>
+                <div class="map-wins-container" id="maps-left"
+                    onclick="event.stopPropagation(); changeMapWin('left', event)"
+                    title="Mapas ganados (Clic izq: sumar, Clic der: restar)">
+                    <div class="map-win-dot" data-idx="0">🍌</div>
+                    <div class="map-win-dot" data-idx="1">🍌</div>
+                    <div class="map-win-dot" data-idx="2">🍌</div>
+                </div>
+                <div class="team-info">
+                    <span id="name-left" class="team-name">SELECCIONAR</span>
+                    <div class="logo-box">
+                        <img id="img-left" src="placeholder-team.png" alt="Logo A">
+                    </div>
+                </div>
+                <div class="score-box" id="score-left" onclick="event.stopPropagation(); changeScore('left')"
+                    title="Rondas ganadas (Clic izq: sumar, Clic der: restar)">0</div>
+            </div>
+        </div>
+
+        <!-- CENTRO DEL TORNEO -->
+        <div class="tournament-center">
+            <div class="row-top">
+                <span class="main-title" id="display-title">Copa Primate</span>
+            </div>
+
+            <div class="row-bottom">
+                <div class="monkey-pad left-pad" id="monkey-pad-left" title="¡Haz clic para abrir el control de tiempos!">
+                    <img src="monito-der.png" class="vol-logo" id="monkeyLeft" alt="Vol.I" style="cursor: pointer;">
+                </div>
+                <span class="sub-title" id="display-subtitle">VOL.II</span>
+                <div class="monkey-pad right-pad" id="monkey-pad-right" title="¡Haz clic para abrir la sincronización de sala!">
+                    <img src="monito-izq.png" class="vol-logo monkey-right" id="monkeyRight" alt="Vol.I" style="cursor: pointer;">
+                </div>
+            </div>
+            <div class="center-accent-bar"></div>
+        </div>
+
+        <!-- EQUIPO DERECHA -->
+        <div class="team-glow-container team-right" id="glow-container-right">
+            <div class="team-wrapper" id="wrapper-right" onclick="openSelector('right')">
+                <div class="leaf-deco leaf-1"></div>
+                <div class="leaf-deco leaf-2"></div>
+                <div class="score-box" id="score-right" onclick="event.stopPropagation(); changeScore('right')"
+                    title="Rondas ganadas (Clic izq: sumar, Clic der: restar)">0</div>
+                <div class="team-info">
+                    <div class="logo-box">
+                        <img id="img-right" src="placeholder-team.png" alt="Logo B">
+                    </div>
+                    <span id="name-right" class="team-name">SELECCIONAR</span>
+                </div>
+                <div class="map-wins-container" id="maps-right"
+                    onclick="event.stopPropagation(); changeMapWin('right', event)"
+                    title="Mapas ganados (Clic izq: sumar, Clic der: restar)">
+                    <div class="map-win-dot" data-idx="2">🍌</div>
+                    <div class="map-win-dot" data-idx="1">🍌</div>
+                    <div class="map-win-dot" data-idx="0">🍌</div>
+                </div>
+                <div class="match-point-badge" id="mp-right">MATCH POINT</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE CONTROL DEL ADMINISTRADOR (UNIFICADO) -->
+    <div class="admin-trigger-btn" onclick="toggleAdminConsole()" title="Abrir Panel de Control">
+        <span>⚙️</span>
+    </div>
+
+    <div class="admin-console" id="admin-console">
+        <div class="admin-header">
+            <span class="admin-title">Panel de Control</span>
+            <button class="admin-close" onclick="toggleAdminConsole()">×</button>
+        </div>
+        <div class="admin-tabs">
+            <button class="admin-tab active" id="tab-btn-partida" onclick="switchAdminTab('tab-partida')">Partida</button>
+            <button class="admin-tab" id="tab-btn-equipos" onclick="switchAdminTab('tab-equipos')">Equipos</button>
+            <button class="admin-tab" id="tab-btn-tiempos" onclick="switchAdminTab('tab-tiempos')">Tiempos</button>
+            <button class="admin-tab" id="tab-btn-sync" onclick="switchAdminTab('tab-sync')">Lobby Sync</button>
+        </div>
+        <div class="admin-body">
+            <!-- TAB PARTIDA -->
+            <div class="admin-panel-content active" id="tab-partida">
+                <div class="admin-section">
+                    <div class="admin-section-title">Control de Marcador</div>
+                    <div class="admin-row">
+                        <div class="admin-col">
+                            <div class="admin-round-adjuster">
+                                <div class="adjuster-row">
+                                    <span class="adjuster-team-name" id="adj-name-left">Seleccionar</span>
+                                    <div class="adjuster-controls">
+                                        <button class="adjuster-btn" onclick="decrementScore('left')">-</button>
+                                        <span class="adjuster-val" id="adj-score-left">0</span>
+                                        <button class="adjuster-btn" onclick="changeScore('left')">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-row">
+                        <div class="admin-col">
+                            <div class="admin-round-adjuster">
+                                <div class="adjuster-row">
+                                    <span class="adjuster-team-name" id="adj-name-right">Seleccionar</span>
+                                    <div class="adjuster-controls">
+                                        <button class="adjuster-btn" onclick="decrementScore('right')">-</button>
+                                        <span class="adjuster-val" id="adj-score-right">0</span>
+                                        <button class="adjuster-btn" onclick="changeScore('right')">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-row" style="margin-top: 12px;">
+                        <div class="admin-col">
+                            <button class="admin-btn" onclick="swapSides()">
+                                <span>⇆</span> Cambiar Lados
+                            </button>
+                        </div>
+                        <div class="admin-col">
+                            <button class="admin-btn btn-danger" onclick="resetScores()">
+                                <span>↺</span> Reiniciar Todo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <div class="admin-section-title">Información del Torneo</div>
+                    <div class="admin-input-group">
+                        <label for="input-tournament-title">Título del Torneo</label>
+                        <input type="text" id="input-tournament-title" value="Copa Primate" oninput="updateTournamentTitle(this.value)">
+                    </div>
+                    <div class="admin-input-group">
+                        <label for="input-tournament-subtitle">Subtítulo / Edición</label>
+                        <input type="text" id="input-tournament-subtitle" value="VOL.II" oninput="updateTournamentSubtitle(this.value)">
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <div class="admin-section-title">Configuración de Partida</div>
+                    <div class="admin-row">
+                        <div class="admin-col">
+                            <div class="admin-input-group">
+                                <label>Formato del Partido</label>
+                                <div class="segment-control">
+                                    <button class="segment-option" id="fmt-bo1" onclick="setGameFormat('BO1')">BO1</button>
+                                    <button class="segment-option active" id="fmt-bo3" onclick="setGameFormat('BO3')">BO3</button>
+                                    <button class="segment-option" id="fmt-bo5" onclick="setGameFormat('BO5')">BO5</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-col">
+                            <div class="admin-input-group">
+                                <label for="select-theme">Tema Visual</label>
+                                <select id="select-theme" onchange="changeThemePreset(this.value)">
+                                    <option value="valorant">Cyber Jungle</option>
+                                    <option value="cyberpunk">Volcanic Ape</option>
+                                    <option value="retrowave">Toxic Primate</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-row">
+                        <div class="admin-col">
+                            <button class="admin-btn" id="btn-toggle-mute" onclick="toggleAudioMute()">
+                                🔊 Sonido: Activado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB EQUIPOS -->
+            <div class="admin-panel-content" id="tab-equipos">
+                <div class="admin-section">
+                    <div class="admin-section-title">Asignar a Lado</div>
+                    <div class="side-selector-row">
+                        <button class="side-selector-btn active left" id="side-select-left" onclick="setSideSelecting('left')">Izquierda</button>
+                        <button class="side-selector-btn right" id="side-select-right" onclick="setSideSelecting('right')">Derecha</button>
+                    </div>
+                    <div class="admin-input-group">
+                        <label for="admin-team-search">Buscar Equipo</label>
+                        <input type="text" id="admin-team-search" placeholder="Escribe para buscar..." oninput="filterAdminTeams(this.value)">
+                    </div>
+                    <div class="admin-team-grid" id="admin-team-grid">
+                        <!-- Rellenado dinámicamente con equipos -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB TIEMPOS -->
+            <div class="admin-panel-content" id="tab-tiempos">
+                <div class="admin-section">
+                    <div class="admin-section-title">Lanzar Cuenta Regresiva</div>
+                    <div class="admin-row">
+                        <button class="admin-btn btn-primary" onclick="startTimer('timeout', 60)">
+                            ⏱️ Tiempo Muerto (1 Min)
+                        </button>
+                    </div>
+                    <div class="admin-row" style="margin-top: 10px;">
+                        <button class="admin-btn btn-danger" onclick="startTimer('tech', 300)">
+                            🚨 Pausa Técnica (5 Min)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB MULTIJUGADOR SYNC -->
+            <div class="admin-panel-content" id="tab-sync">
+                <div class="admin-section">
+                    <div class="admin-section-title">Estado de Conexión</div>
+                    <div class="admin-row" style="align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05)">
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">Estado MQTT:</span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="pulse-icon red" id="consoleSyncPulse"></span>
+                            <span class="status-badge status-disconnected" id="consoleSyncStatus">Desconectado</span>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-input-group">
+                        <label for="consoleSyncRoom">Código de Sala</label>
+                        <input type="text" id="consoleSyncRoom" placeholder="Ej: COPA-1234" maxlength="20">
+                    </div>
+                    
+                    <div class="admin-row" id="sync-disconnected-controls">
+                        <button class="admin-btn btn-primary" onclick="connectMQTTFromConsole()">
+                            📡 Conectar a Sala
+                        </button>
+                    </div>
+                    
+                    <div class="admin-row" id="sync-connected-controls" style="display: none; flex-direction: column; gap: 10px;">
+                        <button class="admin-btn btn-primary" id="consoleBtnCopyLink" onclick="copyLinkFromConsole()">
+                            🔗 Copiar Enlace de Transmisión
+                        </button>
+                        <button class="admin-btn btn-danger" onclick="disconnectMQTTFromConsole()">
+                            🔌 Salir de la Sala
+                        </button>
+                    </div>
+                </div>
+                
+                <details style="margin-top: 15px; font-size: 0.75rem; color: rgba(255,255,255,0.4);">
+                    <summary style="cursor: pointer; padding: 4px 0;">Configuración Avanzada del Broker</summary>
+                    <div class="admin-input-group" style="margin-top: 8px;">
+                        <label for="consoleBrokerInput">Servidor MQTT Broker</label>
+                        <input type="text" id="consoleBrokerInput" value="wss://broker.hivemq.com:8884/mqtt">
+                    </div>
+                    <div class="admin-input-group">
+                        <label for="consoleTopicInput">Prefijo de Canal (Topic)</label>
+                        <input type="text" id="consoleTopicInput" value="copa_primate">
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIMER OVERLAY -->
+    <div id="timer-overlay" class="timer-overlay" style="display: none;">
+        <div class="timer-card">
+            <div class="timer-emoticon" id="timer-emoticon">🙊</div>
+            <div class="timer-title" id="timer-title">TIEMPO MUERTO</div>
+            <div class="timer-countdown" id="timer-countdown">01:00</div>
+            <button class="btn-timer-cancel" id="btnTimerCancel" onclick="cancelTimer()">CANCELAR</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
