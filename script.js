@@ -1,23 +1,30 @@
 // ==========================================================================
 // 1. LISTA OFICIAL DE LOS 14 EQUIPOS
 // ==========================================================================
-const equipos = [
-    { nombre: "Rose Devil", logo: "logo1.png" },
-    { nombre: "Golden Sex", logo: "logo2.png" },
-    { nombre: "Al-dedillo VC", logo: "logo3.png" },
-    { nombre: "LOS AKRTONA2", logo: "logo4.png" },
-    { nombre: "Crimson Eclipse", logo: "logo5.png" },
-    { nombre: "Makaco NinjaPelocho", logo: "logo6.png" },
-    { nombre: "Bloody Fruit", logo: "logo7.png" },
-    { nombre: "Hijas del Kaos", logo: "logo8.png" },
-    { nombre: "Konoha Makaca", logo: "logo9.png" },
-    { nombre: "Team Obrikat", logo: "logo10.png" },
-    { nombre: "TETONES", logo: "logo11.png" },
-    { nombre: "GOATS", logo: "logo12.png" },
-    { nombre: "SPIDYBOOBS", logo: "logo13.png" },
-    { nombre: "MUGIWARAS", logo: "logo14.png" },
-    { nombre: "Miaus", logo: "logo15.png" }
-];
+const GRUPOS = {
+    A: [
+        { nombre: "RHK", jugadores: ["Satha", "Makflat"], logo: "logo1.png" },
+        { nombre: "AK2", jugadores: ["Kira", "Serax"], logo: "logo2.png" },
+        { nombre: "ENB", jugadores: ["レックウザ ", "Militantedelsoe"], logo: "logo5.png" }
+    ],
+    B: [
+        { nombre: "KZN", jugadores: ["Alezita", "Sarix"], logo: "logo4.png" },
+        { nombre: "DTM", jugadores: ["JoKker", "Pepardo"], logo: "logo7.png" },
+        { nombre: "SKR", jugadores: ["Gustavo", "Carlos"], logo: "logo14.png" }
+    ],
+    C: [
+        { nombre: "SR?", jugadores: ["KrypT", "IAngeil-"], logo: "logo11.png" },
+        { nombre: "ThB", jugadores: ["Brrokeen", "Pipe"], logo: "logo3.png" },
+        { nombre: "STP", jugadores: ["TheDori", "Sotomi"], logo: "logo9.png" }
+    ],
+    D: [
+        { nombre: "CMC", jugadores: ["MakaQuillo", "Max"], logo: "logo6.png" },
+        { nombre: "M&L", jugadores: ["Marru", "Lauliet"], logo: "logo13.png" },
+        { nombre: "MRK", jugadores: ["Acid", "Bru"], logo: "logo10.png" }
+    ]
+};
+
+const equipos = Object.values(GRUPOS).flat();
 
 // ==========================================================================
 // 2. CONFIGURACIÓN Y ESTADO DE LA APLICACIÓN
@@ -43,19 +50,19 @@ const MSG_HISTORIAL = new Set();
 window.addEventListener('load', () => {
     // Generar la lista de equipos en la consola administrativa
     generateAdminTeamsList();
-    
+
     // Configurar controladores de eventos para clics y atajos
     setupInteractiveEvents();
-    
+
     // Cargar estado de almacenamiento local para persistencia
     loadLocalStorageState();
-    
+
     // Desbloquear audio
     unlockAudio();
-    
+
     // Auto-conectar MQTT si hay parámetros de sala
     initializeMQTTSync();
-    
+
     // Iniciar temporizador de shine sweep
     startShineSweepInterval();
 });
@@ -65,7 +72,7 @@ function generateAdminTeamsList() {
     const grid = document.getElementById('admin-team-grid');
     if (!grid) return;
     grid.innerHTML = '';
-    
+
     equipos.forEach(eq => {
         const div = document.createElement('div');
         div.className = 'admin-team-option';
@@ -104,13 +111,13 @@ function setupInteractiveEvents() {
         const triggerEl = document.querySelector('.admin-trigger-btn');
         const monkeyLeftEl = document.getElementById('monkeyLeft');
         const monkeyRightEl = document.getElementById('monkeyRight');
-        
+
         if (consoleEl && consoleEl.classList.contains('active')) {
-            const isClickInside = consoleEl.contains(e.target) || 
-                                  (triggerEl && triggerEl.contains(e.target)) ||
-                                  (monkeyLeftEl && monkeyLeftEl.contains(e.target)) ||
-                                  (monkeyRightEl && monkeyRightEl.contains(e.target));
-            
+            const isClickInside = consoleEl.contains(e.target) ||
+                (triggerEl && triggerEl.contains(e.target)) ||
+                (monkeyLeftEl && monkeyLeftEl.contains(e.target)) ||
+                (monkeyRightEl && monkeyRightEl.contains(e.target));
+
             if (!isClickInside) {
                 toggleAdminConsole(false);
             }
@@ -120,7 +127,7 @@ function setupInteractiveEvents() {
     // Control por teclado
     window.addEventListener('keydown', (e) => {
         if (window.isPantalla) return;
-        
+
         // R para resetear todo a cero
         if (e.key === 'r' || e.key === 'R') {
             const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA';
@@ -137,7 +144,7 @@ function setupInteractiveEvents() {
     // Eventos de clic derecho en las cajas de rondas del marcador principal
     const scoreLeftEl = document.getElementById('score-left');
     const scoreRightEl = document.getElementById('score-right');
-    
+
     if (scoreLeftEl) {
         scoreLeftEl.addEventListener('contextmenu', (e) => {
             e.preventDefault();
@@ -154,7 +161,7 @@ function setupInteractiveEvents() {
     // Eventos de clic derecho en los contenedores de mapas
     const mapsLeftEl = document.getElementById('maps-left');
     const mapsRightEl = document.getElementById('maps-right');
-    
+
     if (mapsLeftEl) {
         mapsLeftEl.addEventListener('contextmenu', (e) => {
             e.preventDefault();
@@ -176,7 +183,7 @@ function loadLocalStorageState() {
     const savedFormat = localStorage.getItem('gameFormat');
     const savedTheme = localStorage.getItem('activeTheme');
     const savedMute = localStorage.getItem('isAudioMuted');
-    
+
     if (savedTitle) updateTournamentTitleLocal(savedTitle);
     if (savedSubtitle) updateTournamentSubtitleLocal(savedSubtitle);
     if (savedFormat) setGameFormatLocal(savedFormat);
@@ -186,7 +193,7 @@ function loadLocalStorageState() {
         const btn = document.getElementById('btn-toggle-mute');
         if (btn) btn.innerText = '🔇 Sonido: Silenciado';
     }
-    
+
     updateAdminConsoleUI();
 }
 
@@ -195,12 +202,12 @@ function startShineSweepInterval() {
     setInterval(() => {
         const leftWrap = document.getElementById('wrapper-left');
         const rightWrap = document.getElementById('wrapper-right');
-        
+
         if (leftWrap) {
             leftWrap.classList.add('shine-active');
             setTimeout(() => leftWrap.classList.remove('shine-active'), 2000);
         }
-        
+
         setTimeout(() => {
             if (rightWrap) {
                 rightWrap.classList.add('shine-active');
@@ -217,7 +224,7 @@ function toggleAdminConsole(forceState) {
     if (window.isPantalla) return;
     const consoleEl = document.getElementById('admin-console');
     if (!consoleEl) return;
-    
+
     if (forceState !== undefined) {
         if (forceState) {
             consoleEl.classList.add('active');
@@ -237,15 +244,15 @@ function switchAdminTab(tabId) {
     // Desactivar todas las pestañas
     const tabs = document.querySelectorAll('.admin-tab');
     tabs.forEach(t => t.classList.remove('active'));
-    
+
     // Desactivar todos los paneles
     const panels = document.querySelectorAll('.admin-panel-content');
     panels.forEach(p => p.classList.remove('active'));
-    
+
     // Activar pestaña seleccionada
     const targetTabBtn = document.getElementById(`tab-btn-${tabId.replace('tab-', '')}`);
     if (targetTabBtn) targetTabBtn.classList.add('active');
-    
+
     const targetPanel = document.getElementById(tabId);
     if (targetPanel) targetPanel.classList.add('active');
 }
@@ -256,32 +263,32 @@ function updateAdminConsoleUI() {
     const nameRight = document.getElementById('name-right').innerText;
     const scoreLeft = document.getElementById('score-left').innerText;
     const scoreRight = document.getElementById('score-right').innerText;
-    
+
     // Nombres y Puntos en Rondas
     const adjNameLeft = document.getElementById('adj-name-left');
     const adjNameRight = document.getElementById('adj-name-right');
     const adjScoreLeft = document.getElementById('adj-score-left');
     const adjScoreRight = document.getElementById('adj-score-right');
-    
+
     if (adjNameLeft) adjNameLeft.innerText = nameLeft;
     if (adjNameRight) adjNameRight.innerText = nameRight;
     if (adjScoreLeft) adjScoreLeft.innerText = scoreLeft;
     if (adjScoreRight) adjScoreRight.innerText = scoreRight;
-    
+
     // Ajustar Inputs de información
     const titleInput = document.getElementById('input-tournament-title');
     const subtitleInput = document.getElementById('input-tournament-subtitle');
     const displayTitle = document.getElementById('display-title');
     const displaySubtitle = document.getElementById('display-subtitle');
-    
+
     if (titleInput && displayTitle) titleInput.value = displayTitle.innerText;
     if (subtitleInput && displaySubtitle) subtitleInput.value = displaySubtitle.innerText;
-    
+
     // Segmented format control (BO1/BO3/BO5)
     document.querySelectorAll('.segment-option').forEach(btn => btn.classList.remove('active'));
     const activeFmtBtn = document.getElementById(`fmt-${gameFormat.toLowerCase()}`);
     if (activeFmtBtn) activeFmtBtn.classList.add('active');
-    
+
     // Selector de Tema
     const themeSelect = document.getElementById('select-theme');
     if (themeSelect) themeSelect.value = activeTheme;
@@ -310,7 +317,7 @@ function setSideSelecting(side) {
 function selectTeam(nombre, logo) {
     document.getElementById(`name-${sideSelecting}`).innerText = nombre;
     document.getElementById(`img-${sideSelecting}`).src = logo;
-    
+
     updateAdminConsoleUI();
     broadcastState();
 }
@@ -339,21 +346,21 @@ function closeSelector() { toggleAdminConsole(false); }
 function changeMapWin(side, event) {
     if (window.isPantalla) return;
     event.preventDefault();
-    
+
     let maps = (side === 'left') ? mapsLeft : mapsRight;
-    
+
     if (event.type === 'click') {
         if (maps < 3) maps++;
     } else if (event.type === 'contextmenu') {
         if (maps > 0) maps--;
     }
-    
+
     if (side === 'left') {
         mapsLeft = maps;
     } else {
         mapsRight = maps;
     }
-    
+
     updateMapsUI();
     broadcastState();
 }
@@ -368,7 +375,7 @@ function updateMapsUI() {
             dot.classList.remove('active');
         }
     });
-    
+
     const dotsRight = document.querySelectorAll('#maps-right .map-win-dot');
     dotsRight.forEach((dot) => {
         const dotIdx = parseInt(dot.getAttribute('data-idx'));
@@ -412,7 +419,7 @@ function changeScore(side) {
     if (window.isPantalla) return;
     const scoreEl = document.getElementById(`score-${side}`);
     let currentScore = parseInt(scoreEl.innerText) || 0;
-    
+
     currentScore++;
 
     // Si llega a 14, la partida finaliza por completo y se reinicia
@@ -449,10 +456,10 @@ function checkMatchPoint() {
 
     const scoreLeft = parseInt(scoreLeftEl.innerText) || 0;
     const scoreRight = parseInt(scoreRightEl.innerText) || 0;
-    
+
     const mpLeft = document.getElementById('mp-left');
     const mpRight = document.getElementById('mp-right');
-    
+
     if (mpLeft) mpLeft.style.display = (scoreLeft === 12) ? 'block' : 'none';
     if (mpRight) mpRight.style.display = (scoreRight === 12) ? 'block' : 'none';
 }
@@ -462,7 +469,7 @@ function resetScores() {
     document.getElementById('score-right').innerText = "0";
     mapsLeft = 0;
     mapsRight = 0;
-    
+
     updateMapsUI();
     checkMatchPoint();
     triggerScorePop('left');
@@ -476,37 +483,37 @@ function resetScores() {
 // ==========================================================================
 function swapSides() {
     if (window.isPantalla) return;
-    
+
     // Swap scores
     const scoreLeftEl = document.getElementById('score-left');
     const scoreRightEl = document.getElementById('score-right');
     const tempScore = scoreLeftEl.innerText;
     scoreLeftEl.innerText = scoreRightEl.innerText;
     scoreRightEl.innerText = tempScore;
-    
+
     // Swap team names
     const nameLeftEl = document.getElementById('name-left');
     const nameRightEl = document.getElementById('name-right');
     const tempName = nameLeftEl.innerText;
     nameLeftEl.innerText = nameRightEl.innerText;
     nameRightEl.innerText = tempName;
-    
+
     // Swap team images
     const imgLeftEl = document.getElementById('img-left');
     const imgRightEl = document.getElementById('img-right');
     const tempImg = imgLeftEl.src;
     imgLeftEl.src = imgRightEl.src;
     imgRightEl.src = tempImg;
-    
+
     // Swap map wins variables
     const tempMaps = mapsLeft;
     mapsLeft = mapsRight;
     mapsRight = tempMaps;
-    
+
     // Activar animaciones en ambos lados
     triggerScorePop('left');
     triggerScorePop('right');
-    
+
     updateMapsUI();
     checkMatchPoint();
     updateAdminConsoleUI();
@@ -553,7 +560,7 @@ function changeThemePresetLocal(theme) {
 function toggleAudioMute() {
     isAudioMuted = !isAudioMuted;
     localStorage.setItem('isAudioMuted', isAudioMuted);
-    
+
     const btn = document.getElementById('btn-toggle-mute');
     if (btn) {
         btn.innerText = isAudioMuted ? '🔇 Sonido: Silenciado' : '🔊 Sonido: Activado';
@@ -568,24 +575,24 @@ function initializeMQTTSync() {
     const roomParam = urlParams.get('room');
     const isObs = urlParams.get('pantalla') === 'true';
     const isAdmin = urlParams.get('admin') === 'true';
-    
+
     if (roomParam) {
         window.roomName = roomParam;
-        
+
         // Si tiene sala por URL pero no tiene &admin=true, por defecto actúa como Pantalla
         if (!isAdmin) {
             window.isPantalla = true;
             document.body.classList.add('pantalla-mode');
-            
+
             // Si es el modo de pantalla limpia de OBS, añadimos obs-mode para desactivar interacciones
             if (isObs) {
                 document.body.classList.add('obs-mode');
             }
         }
-        
+
         const roomInput = document.getElementById('consoleSyncRoom');
         if (roomInput) roomInput.value = roomParam;
-        
+
         setTimeout(() => connectMQTT(roomParam), 600);
     } else {
         // Generar código de sala aleatorio
@@ -622,7 +629,7 @@ function copyLinkFromConsole() {
     const roomInput = document.getElementById('consoleSyncRoom');
     const room = roomInput ? roomInput.value.trim() : '';
     const shareUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
-    
+
     navigator.clipboard.writeText(shareUrl).then(() => {
         const btn = document.getElementById('consoleBtnCopyLink');
         if (btn) {
@@ -642,7 +649,7 @@ function connectMQTT(roomName) {
 
     const brokerInput = document.getElementById('consoleBrokerInput');
     const topicInput = document.getElementById('consoleTopicInput');
-    
+
     const broker = (brokerInput?.value.trim()) || 'wss://broker.hivemq.com:8884/mqtt';
     const topicBase = (topicInput?.value.trim()) || 'copa_primate_marcador';
     mqttTopic = `${topicBase}/${roomName.trim()}`;
@@ -660,7 +667,7 @@ function connectMQTT(roomName) {
         console.log(`Conectado a MQTT en sala: ${roomName}`);
         updateConnectionStatus('connected');
         mqttClient.subscribe(mqttTopic, { qos: 0 });
-        
+
         // Pedir estado actual a otros clientes conectados
         publishMQTT({ type: 'REQUEST_STATE' });
     });
@@ -755,7 +762,7 @@ function aplicarEstado(state) {
 
     if (state.nameLeft !== undefined) document.getElementById('name-left').innerText = state.nameLeft;
     if (state.imgLeft !== undefined) document.getElementById('img-left').src = state.imgLeft;
-    
+
     if (state.scoreLeft !== undefined) {
         const leftEl = document.getElementById('score-left');
         if (leftEl.innerText !== state.scoreLeft) {
@@ -763,12 +770,12 @@ function aplicarEstado(state) {
             triggerScorePop('left');
         }
     }
-    
+
     if (state.mapsLeft !== undefined) mapsLeft = state.mapsLeft;
-    
+
     if (state.nameRight !== undefined) document.getElementById('name-right').innerText = state.nameRight;
     if (state.imgRight !== undefined) document.getElementById('img-right').src = state.imgRight;
-    
+
     if (state.scoreRight !== undefined) {
         const rightEl = document.getElementById('score-right');
         if (rightEl.innerText !== state.scoreRight) {
@@ -776,15 +783,15 @@ function aplicarEstado(state) {
             triggerScorePop('right');
         }
     }
-    
+
     if (state.mapsRight !== undefined) mapsRight = state.mapsRight;
-    
+
     // Nuevas configuraciones
     if (state.gameFormat !== undefined) setGameFormatLocal(state.gameFormat);
     if (state.activeTheme !== undefined) changeThemePresetLocal(state.activeTheme);
     if (state.tournamentTitle !== undefined) updateTournamentTitleLocal(state.tournamentTitle);
     if (state.tournamentSubtitle !== undefined) updateTournamentSubtitleLocal(state.tournamentSubtitle);
-    
+
     updateMapsUI();
     checkMatchPoint();
     updateAdminConsoleUI();
@@ -813,17 +820,17 @@ function updateConnectionStatus(status) {
     const disconnectedControls = document.getElementById('sync-disconnected-controls');
     const connectedControls = document.getElementById('sync-connected-controls');
     const roomInput = document.getElementById('consoleSyncRoom');
-    
+
     if (!pulse || !badge) return;
-    
+
     pulse.className = 'pulse-icon';
     badge.className = 'status-badge';
-    
+
     if (status === 'disconnected') {
         pulse.classList.add('red');
         badge.classList.add('status-disconnected');
         badge.textContent = 'DESCONECTADO';
-        
+
         if (disconnectedControls) disconnectedControls.style.display = 'block';
         if (connectedControls) connectedControls.style.display = 'none';
         if (roomInput) roomInput.disabled = false;
@@ -831,7 +838,7 @@ function updateConnectionStatus(status) {
         pulse.classList.add('yellow');
         badge.classList.add('status-connecting');
         badge.textContent = 'CONECTANDO...';
-        
+
         if (disconnectedControls) disconnectedControls.style.display = 'none';
         if (connectedControls) connectedControls.style.display = 'none';
         if (roomInput) roomInput.disabled = true;
@@ -839,7 +846,7 @@ function updateConnectionStatus(status) {
         pulse.classList.add('green');
         badge.classList.add('status-connected');
         badge.textContent = `SALA: ${roomInput ? roomInput.value : ''}`;
-        
+
         if (disconnectedControls) disconnectedControls.style.display = 'none';
         if (connectedControls) connectedControls.style.display = 'flex';
         if (roomInput) roomInput.disabled = true;
@@ -851,29 +858,29 @@ function updateConnectionStatus(status) {
 // ==========================================================================
 function startTimer(type, duration, remoteEndTime = null) {
     cancelTimerLocal();
-    
+
     // Reproducir audio
     playTransitionSound(type);
-    
+
     const endTime = remoteEndTime || (Date.now() + duration * 1000);
-    
+
     activeTimer = {
         type: type,
         duration: duration,
         endTime: endTime,
         intervalId: null
     };
-    
+
     showTimerUI(type);
-    
+
     const initialRemaining = Math.max(0, Math.round((activeTimer.endTime - Date.now()) / 1000));
     updateTimerDisplay(initialRemaining);
-    
+
     // Cuenta regresiva activa
     activeTimer.intervalId = setInterval(() => {
         const remaining = Math.max(0, Math.round((activeTimer.endTime - Date.now()) / 1000));
         updateTimerDisplay(remaining);
-        
+
         if (remaining <= 0) {
             playTransitionSound('end');
             cancelTimerLocal();
@@ -882,7 +889,7 @@ function startTimer(type, duration, remoteEndTime = null) {
             }
         }
     }, 200);
-    
+
     if (!window.isPantalla && !remoteEndTime) {
         broadcastState();
     }
@@ -908,15 +915,15 @@ function cancelTimer() {
 function showTimerUI(type) {
     const mainContainer = document.getElementById('main-scoreboard');
     if (mainContainer) mainContainer.classList.add('timer-active');
-    
+
     const overlay = document.getElementById('timer-overlay');
     if (overlay) {
         overlay.style.display = 'flex';
         overlay.className = 'timer-overlay';
-        
+
         const titleEl = document.getElementById('timer-title');
         const emoticonEl = document.getElementById('timer-emoticon');
-        
+
         if (type === 'timeout') {
             if (titleEl) titleEl.innerText = "TIEMPO MUERTO";
             if (emoticonEl) emoticonEl.innerText = "🙊";
@@ -926,7 +933,7 @@ function showTimerUI(type) {
             if (emoticonEl) emoticonEl.innerText = "🦍🚨";
         }
     }
-    
+
     // Ocultar consola para que el admin vea la pantalla limpia
     toggleAdminConsole(false);
 }
@@ -934,7 +941,7 @@ function showTimerUI(type) {
 function hideTimerUI() {
     const mainContainer = document.getElementById('main-scoreboard');
     if (mainContainer) mainContainer.classList.remove('timer-active');
-    
+
     const overlay = document.getElementById('timer-overlay');
     if (overlay) overlay.style.display = 'none';
 }
@@ -943,7 +950,7 @@ function updateTimerDisplay(seconds) {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    
+
     const countdownEl = document.getElementById('timer-countdown');
     if (countdownEl) countdownEl.innerText = timeStr;
 }
@@ -957,7 +964,7 @@ function playTransitionSound(type) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
         const ctx = new AudioContext();
-        
+
         if (type === 'timeout') {
             const now = ctx.currentTime;
             const osc1 = ctx.createOscillator();
@@ -991,28 +998,28 @@ function playTransitionSound(type) {
             const osc1 = ctx.createOscillator();
             const osc2 = ctx.createOscillator();
             const gain = ctx.createGain();
-            
+
             osc1.type = 'sawtooth';
             osc2.type = 'square';
-            
+
             osc1.frequency.setValueAtTime(330, now);
             osc1.frequency.linearRampToValueAtTime(440, now + 0.25);
             osc1.frequency.linearRampToValueAtTime(330, now + 0.5);
             osc1.frequency.linearRampToValueAtTime(440, now + 0.75);
-            
+
             osc2.frequency.setValueAtTime(333, now);
             osc2.frequency.linearRampToValueAtTime(443, now + 0.25);
             osc2.frequency.linearRampToValueAtTime(333, now + 0.5);
             osc2.frequency.linearRampToValueAtTime(443, now + 0.75);
-            
+
             gain.gain.setValueAtTime(0.1, now);
             gain.gain.linearRampToValueAtTime(0.1, now + 0.6);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
-            
+
             osc1.connect(gain);
             osc2.connect(gain);
             gain.connect(ctx.destination);
-            
+
             osc1.start(now);
             osc2.start(now);
             osc1.stop(now + 0.85);
