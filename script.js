@@ -18,7 +18,7 @@ const GRUPOS = {
         { nombre: "STP", jugadores: ["TheDori", "Sotomi"], logo: "logo9.png" }
     ],
     D: [
-        { nombre: "CMC", jugadores: ["MakaQuillo", "Max"], logo: "logo6.png" },
+        { nombre: "MNP", jugadores: ["MakacoNinja", "Iker"], logo: "logo6.png" },
         { nombre: "M&L", jugadores: ["Marru", "Lauliet"], logo: "logo13.png" },
         { nombre: "MRK", jugadores: ["Acid", "Bru"], logo: "logo10.png" }
     ]
