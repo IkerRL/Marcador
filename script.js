@@ -18,8 +18,8 @@ const GRUPOS = {
         { nombre: "STP", jugadores: ["TheDori", "Sotomi"], logo: "logo9.png" }
     ],
     D: [
-        { nombre: "MNP", jugadores: ["MakacoNinja", "Iker"], logo: "logo6.png" },
-        { nombre: "CMC", jugadores: ["ChuChu", "Max"], logo: "logo13.png" },
+        { nombre: "CMC", jugadores: ["MakaQuillo", "Max"], logo: "logo6.png" },
+        { nombre: "M&L", jugadores: ["Marru", "Lauliet"], logo: "logo13.png" },
         { nombre: "MRK", jugadores: ["Acid", "Bru"], logo: "logo10.png" }
     ]
 };
@@ -422,16 +422,33 @@ function changeScore(side) {
 
     currentScore++;
 
-    // Si llega a 14, la partida finaliza por completo y se reinicia
-    if (currentScore >= 14) {
-        console.log("Partida finalizada por 13 rondas.");
-        resetScores();
-    } else {
-        scoreEl.innerText = currentScore;
-        triggerScorePop(side);
+    // "al sumar y llegar a 6 se reinicia el marcador pero se quedan los platanos"
+    if (currentScore === 6) {
+        document.getElementById('score-left').innerText = "0";
+        document.getElementById('score-right').innerText = "0";
         checkMatchPoint();
+        triggerScorePop('left');
+        triggerScorePop('right');
         updateAdminConsoleUI();
+        broadcastState();
+        return;
     }
+
+    scoreEl.innerText = currentScore;
+    triggerScorePop(side);
+
+    // "cuando se llega a 5 se añade un platano a el equipo q tiene 5"
+    if (currentScore === 5) {
+        if (side === 'left') {
+            if (mapsLeft < 3) mapsLeft++;
+        } else {
+            if (mapsRight < 3) mapsRight++;
+        }
+        updateMapsUI();
+    }
+
+    checkMatchPoint();
+    updateAdminConsoleUI();
     broadcastState();
 }
 
@@ -460,8 +477,8 @@ function checkMatchPoint() {
     const mpLeft = document.getElementById('mp-left');
     const mpRight = document.getElementById('mp-right');
 
-    if (mpLeft) mpLeft.style.display = (scoreLeft === 12) ? 'block' : 'none';
-    if (mpRight) mpRight.style.display = (scoreRight === 12) ? 'block' : 'none';
+    if (mpLeft) mpLeft.style.display = (scoreLeft === 4) ? 'block' : 'none';
+    if (mpRight) mpRight.style.display = (scoreRight === 4) ? 'block' : 'none';
 }
 
 function resetScores() {
